@@ -46,21 +46,13 @@ function postReducer(state, action) {
       };
     }
     case "search-post": {
-      const userSearchPost =
-        state.searchQuery.length > 0
-          ? state.posts.filter((post) =>
-              `${post.title} ${post.body}`
-                .toLowerCase()
-                .includes(state.searchQuery.toLowerCase())
-            )
-          : state.posts;
       return {
         ...state,
-        searchedPosts: userSearchPost,
+        searchedPosts: action.payload,
       };
     }
     default:
-      return state; // Return current state if action type is not matched
+      return action.payload; // Return current state if action type is not matched
   }
 }
 

@@ -5,7 +5,7 @@ import Footer from "./components/Footer";
 import Main from "./components/Main";
 import Archive from "./components/Archive";
 import Button from "./components/Button";
-import  { usePost, usePostDispatch } from "./contexts/context";
+import { usePost, usePostDispatch } from "./contexts/context";
 
 function createRandomPost() {
   return {
@@ -16,13 +16,27 @@ function createRandomPost() {
 
 function App() {
   const dispatch = usePostDispatch();
-  const { isFakeDark } = usePost();
+  const { isFakeDark, searchQuery,  posts } = usePost();
   useEffect(
     function () {
       const loadedPost = Array.from({ length: 30 }, () => createRandomPost());
       dispatch({ type: "upload-post", payload: loadedPost });
     },
     [dispatch]
+  );
+  useEffect(
+    function () {
+      const userSearchPost =
+        searchQuery.length > 0
+          ? posts.filter((post) =>
+              `${post.title} ${post.body}`
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase())
+            )
+          : posts;
+      dispatch({ type: "search-post", payload: userSearchPost });
+    },
+    [searchQuery, posts, dispatch]
   );
 
   // Whenever `isFakeDark` changes, we toggle the `fake-dark-mode` class on the HTML element (see in "Elements" dev tool).
